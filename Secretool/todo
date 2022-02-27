@@ -1,0 +1,10 @@
+design:
+    json format
+cli command:
+    fetch remote
+    upload
+    unseal
+    seal
+    list {nametree}
+    add {name} {key=value}
+    delete {name} {key}
