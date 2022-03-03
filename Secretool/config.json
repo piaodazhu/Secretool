@@ -1,7 +1,10 @@
 [{
-    "Server":"81.70.165.15",
-    "Port":9939,
-    "Path":"Secretool/test/",
-    "Username":"user1",
-    "Password":"passwd"
+    "username":"user1",
+    "servers": [
+        {
+            "ip":"81.70.165.15",
+            "port":9939,
+            "token": "xxxx"
+        }
+    ]
 }]

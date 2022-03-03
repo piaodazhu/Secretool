@@ -1,5 +1,6 @@
 import pyDes
 import binascii         #二进制和 ASCII 码互转
+import base64
 
 #创建类
 class Descryption:
@@ -26,8 +27,10 @@ while True:
     key = input("请输入秘钥：\n")
     mode = input("encrypt or decrypt?：\n")
     if mode.strip() == 'encrypt':
-        plaintext = input("请输入明文：\n")
-        des.des_encrypt(key, plaintext.strip())
+        plaintext = input("请输入明文：\n").encode()
+        enctest = des.des_encrypt(key, plaintext)
+        with open('b64test.txt', 'wb') as f:
+            f.write(base64.b64encode(enctest))
     else:
         ciphertext = input("请输入密文：\n")
-        des.des_decrypt(key, ciphertext.strip())
+        des.des_decrypt(key, ciphertext)
