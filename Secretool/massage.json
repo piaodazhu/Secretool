@@ -1,7 +1,0 @@
-{
-    "username": "xxxx",
-    "password": "yyyy",
-    "command": "pull/push/query",
-    "version": 123,
-    "raw": "yyyy"
-}

@@ -1,2 +1,2 @@
 # Secretool
-keep your secrete
+keep your secret :)

@@ -1,0 +1,47 @@
+local:
+	[y] ctrl+D or ctrl+C to quit. (won't save)
+	[y] enter for nothing
+	[n] help for guidance
+	[y] init to init a new db. -> warning
+	[y] not allow operations without init. list can tell.
+	[y] save for persistence anytime
+	[y] seal only when unseal, but no error. -> warning: save?
+	[y] unseal only when seal, but no error
+	[y] unsealed secret won't need password
+	[y] import json db
+	[y] export json db
+	[y] list all keys under a nametree
+	[y] add new key-val under a name
+	[y] delete a key-val under a name
+	[y] quit + unsealed -> warning: save before quit?
+	[y] export + unsealed -> export from memory
+	[y] export + sealed -> export from disk 
+	[y] import + unsealed -> import into memory not save
+	[y] key input 3 retries
+	[y] modified?
+	[y] local.sdb invisible
+	[y] password mapped to length=8
+	[y] check password
+	[y] check all command
+	[y] cmd prompt color
+	[y] get value of key
+	[ ] support file as item
+	[n] history up down left right for cmd
+	[y] reload server
+	[y] all operations with password retry
+	[y] purge nodes
+remote:
+	[y] query-remote to get versions anytime
+	[y] pull-remote to fetch a new db. -> must be sealed
+	[y] push-remote to upload this db. -> must be saved
+	[n] clean-remote delete a version.
+	[y] version is always a digit
+	[y] server persistence, lock
+	[y] server copies securety (signature)
+	[y] signature password confirm and check
+global:
+	[y] remember password
+	[y] clean code
+	[ ] README
+	[ ] manual
+	[y] requirements
