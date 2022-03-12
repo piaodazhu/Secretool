@@ -25,7 +25,9 @@ local:
 	[y] check all command
 	[y] cmd prompt color
 	[y] get value of key
-	[ ] support file as item
+	[y] support file as item (-f filename | -s sentence)
+	[y] use ' ' to specify a complete string value.
+	[ ] edit doc for above 2 features.
 	[n] history up down left right for cmd
 	[y] reload server
 	[y] all operations with password retry
@@ -42,6 +44,6 @@ remote:
 global:
 	[y] remember password
 	[y] clean code
-	[ ] README
-	[ ] manual
+	[y] README
+	[y] manual
 	[y] requirements

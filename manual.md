@@ -22,9 +22,15 @@ Command prompt is like:
 - `super`: a state that two keys are remembered in memory and will autofill when needed.
 - `*`: means there are unsaved modifies.
 
-For user, only one or two password should be remembered for managing the whole secret zone: `encryption password` and `signing password`. They are ranging from 6 to 16, setting by yourself, mapping to secret key before encrpt the secret zone and digest. Complex passwords are recommanded, but it is really important for yourself to keep them in mind, because no one can encrypt your secrets except providing these passwords. `encryption password` is necessary and `signing password` is optional.
+For user, only one or two password should be remembered for managing the whole secret zone: `encryption password` and `signing password`. They are ranging from 6 to 16, setting by yourself, mapping to secret key before encrpt the secret zone and digest. Complex passwords are recommanded, but it is really important for yourself to keep them in mind, because no one can encrypt your secrets except who providing these passwords. `encryption password` is necessary and `signing password` is optional.
 
 ## Secret server
+
+`Secret server`, or `SServer` is designed for automatically making backup and maintaining versions. User can upload current secret zone to SServer by `push-remote`, see all versions as well as its upload time by `query-remote`, and download any valid version from SServer by `pull-remote [$version]`. If the version to be download is not specified, SServer will provide the latest version of encrypted secret zone.
+
+`SServer` automatically saves the uploaded versions into a file on the disk. The file can be moved from one host to another, without losting any information of users secret. By copying the file and configurate the `Secretool`, secret zone can be backed up in multipoints and recovered from any from them. 
+
+`SServer` maintains encrypted data so it cannot see the users' secret zone. And signatures is introduced to avoid tampering. When `Secretool` downloads a version it will check the signature. If the signature is invalid, the SServer is no longer safe. Anyway, trusted host is recommanded for users to deploy `SServer`.
 
 ## Command
 

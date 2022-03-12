@@ -1,1 +1,2 @@
 pyDes
+pyreadline

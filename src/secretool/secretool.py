@@ -9,9 +9,35 @@ import getpass
 import time
 import random
 import hashlib
+import readline
 from secretcontroller import SecretController
 from secretsec import SecretSec
 from secretdb import SecretDB
+
+helpmessage = "\n\
+command             explaination\n\
+=============================================\n\
+help                print usage of Secretool\n\
+quit                quit the Scretool Shell\n\
+init                initialize a encrypted secret zone\n\
+list [$s]           list all keys under the scope s\n\
+add $s $k $v        add key-value pair (k,v) in the scope s\n\
+get $s $k           get value of k under scope\n\
+delete $s $k        delete key-value pair (k,*) in the scope s\n\
+purge $s            purge scope, clear all key-value pairs in and under the scope s\n\
+save                save the modified secret zone into disk\n\
+export $filename    decrypt and export the secret zone to a cleartext json file\n\
+import $filename    import the secret zone from a cleartext json file and encrypt\n\
+unseal              switch to the mode where you can read and edit without password\n\
+seal                switch to the mode where you must input password to see your secrets\n\
+query-remote        query the remote server for historical uploaded encrypted secret zones\n\
+pull-remote [$v]    download the encrypted secret zone version $v from the remote server\n\
+push-remote         upload current encrypted secret zone to the remote server\n\
+reload-server       reload and check remote server configuration from config.json\n\
+preload-keys        preload your encryption key and signing key for autofill\n\
+clear-keys          clear the keys and cancel autofill\n\
+    read the manual for more details.\n\
+"
 
 def main():
     controller = SecretController()
@@ -39,8 +65,10 @@ def main():
             else:
                 modifystr = ""
             # usercommand = input('%s@Secretool:[%s][%s]>' % (username, sealstr, modifystr)).split()
-            usercommand = input('\033[1;32;50m%s\033[0m@\033[1;37;44mSecretool\033[0m:[\033[0;37;%dm%s\033[0m][\033[0;37;%dm%s\033[0m]\033[0;31;50m%s\033[0m> ' %
-                                (username, sealcolor, sealstr, keyloadcolor, keyloadstr, modifystr)).split()
+            print('\033[1;32;50m%s\033[0m@\033[1;37;44mSecretool\033[0m:[\033[0;37;%dm%s\033[0m][\033[0;37;%dm%s\033[0m]\033[0;31;50m%s\033[0m' %
+                                (username, sealcolor, sealstr, keyloadcolor, keyloadstr, modifystr))
+            userinput = input('$> ')
+            usercommand = userinput.split()
 
             if len(usercommand) == 0:
                 continue
@@ -63,7 +91,7 @@ def main():
                 if len(usercommand) != 1:
                     print("Usage example: help")
                     continue
-                print("help message")
+                print(helpmessage)
 
             elif usercommand[0] == 'reload-server':
                 if len(usercommand) != 1:
@@ -134,11 +162,35 @@ def main():
                 sdb.listItems(scope)
 
             elif usercommand[0] == 'add':
-                # command
-                if len(usercommand) != 4:
-                    print("Usage example: add /your/path yourtitle yourvalue")
+                tmp = userinput.split("'")
+                buf = ""
+                valid = True
+                if len(usercommand) < 5:
+                    valid = False
+                elif usercommand[3] == '-s' and len(tmp) == 3:
+                    buf = tmp[1]
+                elif usercommand[3] == '-s' and len(tmp) == 1 and len(usercommand) == 5:
+                    buf = usercommand[4]
+                elif len(usercommand) == 5 and usercommand[3] == '-f' and len(tmp) == 1:
+                    try:
+                        with open(usercommand[4], 'r') as f:
+                            buf = f.read()
+                    except:
+                        print("invalid filename")
+                        valid = False
+                else:
+                    valid = False
+                
+                if valid:
+                    sdb.addItem(usercommand[1], usercommand[2], buf)
+                else:
+                    print("Usage example: add /your/path yourtitle [-s 'sentence' | -f filename]")
                     continue
-                sdb.addItem(usercommand[1], usercommand[2], usercommand[3])
+                # if valid == False and usercommand[3] == '-s'
+                # if len(usercommand) != 5:
+                #     print("Usage example: add /your/path yourtitle [-s 'sentence' | -f filename]")
+                #     continue
+                # sdb.addItem(usercommand[1], usercommand[2], usercommand[3])
 
             elif usercommand[0] == 'delete':
                 if len(usercommand) != 3:

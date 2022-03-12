@@ -184,6 +184,7 @@ class SecretDB():
 
         if not self.isSealed:
             self.localDB = newdb
+            self.ismodified = True
         else:
             tmp = json.dumps(newdb)
             # print(tmp)
