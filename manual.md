@@ -14,7 +14,7 @@ Below is simple architecture of `Secretool`:
 
 Command prompt is like:
 ```sh
-{username}@Secretool:[ {sealed or unsealed} ][ {safer or super} ]{* or null}> {your command} 
+{username}@Secretool:[ {sealed or unsealed} ][ {safer or super} ]{* or null}$> {your command} 
 ```
 - `seal`: a state that you must input password to read, write, export your local secret zone.
 - `unseal`: a state that you can manage your local secret zone without password.
@@ -42,7 +42,7 @@ quit                quit the Scretool Shell
 
 init                initialize a encrypted secret zone
 list [$s]           list all keys under the scope s
-add $s $k $v        add key-value pair (k,v) in the scope s
+add $s $k [-f|s] $v add key-value pair (k,v) in the scope s. -f: v is a filename, -s: v is a sentence
 get $s $k           get value of k under scope
 delete $s $k        delete key-value pair (k,*) in the scope s
 purge $s            purge scope, clear all key-value pairs in and under the scope s

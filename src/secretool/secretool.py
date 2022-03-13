@@ -9,10 +9,39 @@ import getpass
 import time
 import random
 import hashlib
-import readline
+import sys
 from secretcontroller import SecretController
 from secretsec import SecretSec
 from secretdb import SecretDB
+
+try:
+    import readline
+except ImportError:
+    print("warning: module readline or pyreadline not found. SShell may won't autocomplete.")
+else:
+    import rlcompleter
+    print("ok")
+    if(sys.platform == 'darwin'):
+        readline.parse_and_bind ("bind ^I rl_complete")
+    else:
+        readline.parse_and_bind("tab: complete")
+
+CMD = ['help', 'quit', 'init', 'list', 'add',
+        'add', 'get', 'delete', 'purge', 'save',
+        'export', 'import', 'unseal', 'seal',
+        'query-remote', 'pull-remote', 'push-remote',
+        'reload-server', 'preload-keys', 'clear-keys']
+
+def completer(text, state):
+    
+    options = [cmd for cmd in CMD if cmd.startswith(text)]
+    if state < len(options):
+        return options[state]
+    else:
+        return None
+
+readline.parse_and_bind("tab: complete")
+readline.set_completer(completer)
 
 helpmessage = "\n\
 command             explaination\n\
@@ -21,7 +50,7 @@ help                print usage of Secretool\n\
 quit                quit the Scretool Shell\n\
 init                initialize a encrypted secret zone\n\
 list [$s]           list all keys under the scope s\n\
-add $s $k $v        add key-value pair (k,v) in the scope s\n\
+add $s $k [-f|s] $v add key-value pair (k,v) in the scope s. -f: v is a filename, -s: v is a sentence\n\
 get $s $k           get value of k under scope\n\
 delete $s $k        delete key-value pair (k,*) in the scope s\n\
 purge $s            purge scope, clear all key-value pairs in and under the scope s\n\
@@ -65,9 +94,10 @@ def main():
             else:
                 modifystr = ""
             # usercommand = input('%s@Secretool:[%s][%s]>' % (username, sealstr, modifystr)).split()
-            print('\033[1;32;50m%s\033[0m@\033[1;37;44mSecretool\033[0m:[\033[0;37;%dm%s\033[0m][\033[0;37;%dm%s\033[0m]\033[0;31;50m%s\033[0m' %
+            # print('\033[1;32;50m%s\033[0m@\033[1;37;44mSecretool\033[0m:[\033[0;37;%dm%s\033[0m][\033[0;37;%dm%s\033[0m]\033[0;31;50m%s\033[0m' %
+            #                     (username, sealcolor, sealstr, keyloadcolor, keyloadstr, modifystr))
+            userinput = input('\033[1;32;50m%s\033[0m@\033[1;37;44mSecretool\033[0m:[\033[0;37;%dm%s\033[0m][\033[0;37;%dm%s\033[0m]\033[0;31;50m%s\033[0m$> ' %
                                 (username, sealcolor, sealstr, keyloadcolor, keyloadstr, modifystr))
-            userinput = input('$> ')
             usercommand = userinput.split()
 
             if len(usercommand) == 0:

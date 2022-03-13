@@ -25,11 +25,11 @@ Features:
 ### 1. preparation
 
 ```bash
-$> sudo apt install python3 # or other ways
-$> pip3 install pyDes  # or other ways
+~$ sudo apt install python3 # or other ways
+~$ pip3 install pyDes  # or other ways
 
 # then test:
-$> python3
+~$ python3
 # ...
 import pyDes
 # no error is ok
@@ -40,8 +40,8 @@ import pyDes
 The config file is simple:
 
 ```bash
-$> cd $SecretoolPath/src/secretool/
-$> vim config.json
+~$ cd $SecretoolPath/src/secretool/
+~$ vim config.json
 # config your secretool
 ```
 
@@ -68,8 +68,8 @@ If you want to use a secret server, simply configure the server first:
 
 
 ```bash
-$> cd $SecretoolPath/src/remote-server/
-$> vim secretdb_template.json
+~$ cd $SecretoolPath/src/remote-server/
+~$ vim secretdb_template.json
 # config your server
 ```
 
@@ -91,12 +91,12 @@ $> vim secretdb_template.json
 
 ```bash
 # if you want use a secret server. Or skip.
-$> cd $SecretoolPath/src/remote-server/
-$> python3 secretserver.py
+~$ cd $SecretoolPath/src/remote-server/
+~$ python3 secretserver.py
 
 # start your Secretool
-$> cd $SecretoolPath/src/secretool/
-$> python3 secretool.py
+~$ cd $SecretoolPath/src/secretool/
+~$ python3 secretool.py
 ```
 
 ## Manage your first secret
@@ -104,34 +104,34 @@ $> python3 secretool.py
 Once you start `secretool.py` successfully, a `Secretool Shell` will be created. Lets manage your first secret without secret server:
 
 ```bash
-$> python3 secretool.py 
+~$ python3 secretool.py 
 [Errno 111] Connection refused
 run in local mode without remote server. :)
 localdb not found! you may pull yours from server later by 'pull', or create one by 'init'.
 initiate done. enter help for guidance. :)
 
-user1@Secretool:[ sealed ][ safer ]> init
+user1@Secretool:[ sealed ][ safer ]$> init
 This may erase previous secrets. Are you sure to initialize a new secret database?
 Enter [yes] or [no]: yes
 set <ENCRYPTION PASSWORD> (length between 6 and 16): 
 enter the above password again to confirm: 
 ok
-user1@Secretool:[ sealed ][ safer ]> add /my/secret first helloworld    
+user1@Secretool:[ sealed ][ safer ]$> add /my/secret first -s 'hello world'    
 enter your <ENCRYPTION PASSWORD>: 
 ok
-user1@Secretool:[ sealed ][ safer ]> list
+user1@Secretool:[ sealed ][ safer ]$> list
 enter your <ENCRYPTION PASSWORD>: 
 /my/secret: ['first']
-user1@Secretool:[ sealed ][ safer ]> get /my/secret first
+user1@Secretool:[ sealed ][ safer ]$> get /my/secret first
 enter your <ENCRYPTION PASSWORD>: 
 get first under </my/secret>:
-helloworld
-user1@Secretool:[ sealed ][ safer ]> delete /my/secret first
+hello world
+user1@Secretool:[ sealed ][ safer ]$> delete /my/secret first
 enter your <ENCRYPTION PASSWORD>: 
 ok. delete title=first, val=helloworld...
-user1@Secretool:[ sealed ][ safer ]> list
+user1@Secretool:[ sealed ][ safer ]$> list
 enter your <ENCRYPTION PASSWORD>: 
-user1@Secretool:[ sealed ][ safer ]> quit
+user1@Secretool:[ sealed ][ safer ]$> quit
 bye bye~ :)
 ```
 
@@ -143,6 +143,10 @@ That is quit simple. :)
 
 You can get all supported commands by command `help` inside Secretool Shell. More information can be found in `manual.md`. Here are some useful tips:
 
+- How to add a long sentence with space into secret zone?
+    - `add $scope $title -s 'your sentence'`
+- How to add a complete file content into secret zone?
+    - `add $scope $title -f $filename`
 - How to clear all secrets in and under a scope?
     - `purge $scope`
 - How to manage your secrets without password temporary?
