@@ -41,6 +41,7 @@ remote:
 	[y] server persistence, lock
 	[y] server copies securety (signature)
 	[y] signature password confirm and check
+	[ ] server configuration
 global:
 	[y] remember password
 	[y] clean code
