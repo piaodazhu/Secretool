@@ -10,25 +10,26 @@ global secretdb
 global dirty
 global threadLock
 
-filename = 'secretdb_template.json'
-
+dbfile = 'secretdb.json'
+conffile = 'config.json'
 
 class storeThread(threading.Thread):
     def __init__(self, delay=1):
         threading.Thread.__init__(self)
         self.delay = delay
+        self.killed = False
 
     def run(self):
         global dirty
         global threadLock
         global secretdb
-        while True:
+        while True and not self.killed:
             if dirty == True:
                 time.sleep(self.delay)
                 threadLock.acquire()
-                with open(filename, 'w') as f:
+                with open(dbfile, 'w') as f:
                     json.dump(secretdb, f, indent=4, separators=(',', ': '))
-                print("write!")
+                # print("write!")
                 dirty = False
                 threadLock.release()
             else:
@@ -40,8 +41,11 @@ class processThread(threading.Thread):
         threading.Thread.__init__(self)
         self.clientSocket = clientSocket
         self.clientAddr = clientAddr
+        self.killed = False
 
     def run(self):
+        if self.killed:
+            return
         print(self.clientAddr)
         global dirty
         global threadLock
@@ -70,7 +74,7 @@ class processThread(threading.Thread):
             self.clientSocket.close()
             return
 
-        item = getItemwdByUser(username)
+        item = secretdb.get(username)
         if not item:
             time.sleep(3)
             self.clientSocket.send("Wrong username!".encode())
@@ -181,11 +185,11 @@ class processThread(threading.Thread):
             return
 
 
-def getItemwdByUser(username):
-    for item in secretdb:
-        if item['username'] == username:
-            return item
-    return {}
+# def getItemwdByUser(username):
+#     for item in secretdb:
+#         if item['username'] == username:
+#             return item
+#     return {}
 
 
 def main():
@@ -193,20 +197,55 @@ def main():
     global threadLock
     global dirty
     dirty = False
-    with open(filename, 'rb') as f:
-        secretdb = json.load(f)
-    serverSocket = socket.socket()
-    host = "127.0.0.1"
-    port = 9933
-    serverSocket.bind((host, port))
-    serverSocket.listen(12)
+    try:
+        with open(conffile, 'r') as f:
+            conf = json.load(f)
+        host = conf['serveip']
+        port = conf['serveport']
+        clientlist = conf['clientlist']
+        clientset = set()
+        for client in clientlist:
+            if client['username'] in clientset:
+                raise Exception
+            clientset.add(client['username'])
+        print('client count: %d' % len(clientset))
+    except:
+        print("invalid config file!")
+        return
+    
+    try:
+        with open(dbfile, 'rb') as f:
+            secretdb = json.load(f)
+        for client in clientlist:
+            account = secretdb.get(client['username'])
+            if account:
+                account['token'] = client['token']
+            else:
+                secretdb[client['username']] = {'token': client['token'], 'content': []}
+    except:
+        print("invalid database file!")
+        return
+
+    try:
+        serverSocket = socket.socket()
+        serverSocket.bind((host, port))
+        serverSocket.listen(12)
+    except:
+        print("network error!")
+        return
+
     threads = []
     threadLock = threading.Lock()
-    print("initating done! waiting for connection...")
+    print("initating done! listen on %s:%d. waiting for connection..." % (host, port))
     storeth = storeThread()
     storeth.start()
     while True:
-        clientSocket, clientAddr = serverSocket.accept()
+        try:
+            clientSocket, clientAddr = serverSocket.accept()
+        except KeyboardInterrupt:
+            print("bye bye~ :)")
+            storeth.killed = True
+            exit()
         i = 100
         while i > 8:
             i = 0

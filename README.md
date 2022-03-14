@@ -1,4 +1,4 @@
-# Secretool: a Friendly, Lightweight Secret Managment Tool
+# Secretool: a User-friendly, Lightweight Secret Managment Tool
 
 ## Overview
 
@@ -69,21 +69,25 @@ If you want to use a secret server, simply configure the server first:
 
 ```bash
 ~$ cd $SecretoolPath/src/remote-server/
-~$ vim secretdb_template.json
+~$ vim config.json
 # config your server
 ```
 
 ```json
-[
-    {
-        "username": "yourname",
-        "token": "xxxx"
-    },
-    {
-        "username": "nameforothers",
-        "token": "yyyy"
-    },
-]
+{
+    "serveip": "0.0.0.0",
+    "serveport": 9933,
+    "clientlist": [
+        {
+            "username": "user1",
+            "token": "xxxx"
+        },
+        {
+            "username": "user2",
+            "token": "yyyy"
+        }
+    ]
+}
 ```
 `username` and `token` should be consistent with Secretool client.
 

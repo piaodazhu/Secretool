@@ -1,0 +1,14 @@
+{
+    "serveip": "0.0.0.0",
+    "serveport": 9933,
+    "clientlist": [
+        {
+            "username": "user1",
+            "token": "xxxx"
+        },
+        {
+            "username": "user2",
+            "token": "yyyy"
+        }
+    ]
+}
