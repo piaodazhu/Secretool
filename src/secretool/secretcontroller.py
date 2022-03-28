@@ -1,6 +1,7 @@
 import socket
 import json
 import time
+from sys import exit
 
 class SecretController():
     def __init__(self):
@@ -9,8 +10,8 @@ class SecretController():
                 config = json.load(f)
             self.username = config['username']
         except:
-            print("invalid configuration!")
-            return
+            print("config.json not found!")
+            exit(1)
 
         try:
             serverConf = config['servers'][0]
@@ -28,7 +29,7 @@ class SecretController():
                 serverConf = json.load(f)['servers'][0]
         except:
             print("invalid configuration!")
-            return
+            exit(2)
 
         try:
             self.serverIP = serverConf['ip']

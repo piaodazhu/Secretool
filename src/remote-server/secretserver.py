@@ -4,7 +4,7 @@ import threading
 import socket
 import time
 import json
-
+from sys import exit
 
 global secretdb
 global dirty
@@ -216,6 +216,10 @@ def main():
     try:
         with open(dbfile, 'rb') as f:
             secretdb = json.load(f)
+    except:
+        secretdb = {}
+
+    try:
         for client in clientlist:
             account = secretdb.get(client['username'])
             if account:
@@ -223,8 +227,8 @@ def main():
             else:
                 secretdb[client['username']] = {'token': client['token'], 'content': []}
     except:
-        print("invalid database file!")
-        return
+        print("invalid config file!")
+        exit(1)
 
     try:
         serverSocket = socket.socket()
